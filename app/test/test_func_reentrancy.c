@@ -67,12 +67,14 @@ static uint32_t synchro;
 static int
 test_eal_init_once(__rte_unused void *arg)
 {
+	char appname[] = __FILE__;
 	unsigned lcore_self =  rte_lcore_id();
+	char *argv[] = { appname, NULL };
 
 	WAIT_SYNCHRO_FOR_WORKERS();
 
 	__atomic_store_n(&obj_count, 1, __ATOMIC_RELAXED); /* silent the check in the caller */
-	if (rte_eal_init(0, NULL) != -1)
+	if (rte_eal_init(RTE_DIM(argv) - 1, argv) != -1)
 		return -1;
 
 	return 0;
